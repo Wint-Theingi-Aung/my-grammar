@@ -1,59 +1,41 @@
-import { supabase } from '@/lib/supabaseClient';
-import GrammarCard from '@/components/GrammarCard';
-import ExerciseCard from '@/components/ExerciseCard';
-
-async function getLesson() {
-  // Supabase ကနေ Unit 1 data ကို ယူမယ်
-  const { data, error } = await supabase
-    .from('grammar_lessons')
-    .select('*')
-    .eq('unit_no', 1)
-    .single();
-  
-  if (error) {
-    console.error('Error fetching data:', error);
-    return null;
-  }
-  return data;
-}
+import { supabase } from '@/lib/supabase';
+import Link from 'next/link';
 
 export default async function Home() {
-  const lesson = await getLesson();
+  // grammar_lessons table ထဲက unit_no နဲ့ title အကုန်လုံးကို ခေါ်ယူခြင်း
+  const { data: lessons, error } = await supabase
+    .from('grammar_lessons')
+    .select('unit_no, title')
+    .order('unit_no', { ascending: true });
 
-  if (!lesson) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <p className="text-xl font-semibold text-gray-500">
-          ဒေတာ ရှာမတွေ့ပါ သို့မဟုတ် Key များ မှားနေပါသည်...
-        </p>
-      </div>
-    );
+  if (error) {
+    return <div className="p-10 text-red-500">Error loading lessons: {error.message}</div>;
   }
 
   return (
-    <main className="min-h-screen bg-zinc-50 p-6 sm:p-12">
+    <main className="min-h-screen bg-gray-50 p-4 md:p-8">
       <div className="max-w-2xl mx-auto">
-        <header className="text-center mb-12">
-          <h1 className="text-4xl font-black text-zinc-900 tracking-tight">
-            My Grammar App
-          </h1>
-          <p className="text-zinc-500 mt-2">English Grammar For Fellows</p>
+        <header className="mb-10 text-center">
+          <h1 className="text-3xl font-bold text-blue-600 mb-2">English Grammar For Fellows</h1>
+          <p className="text-gray-600">သင်ခန်းစာများကို ရွေးချယ်လေ့လာပါ</p>
         </header>
 
-        {/* Grammar Card */}
-        <GrammarCard lesson={lesson} />
-
-        {/* Exercises Section */}
-        <div className="mt-16">
-          <h3 className="text-2xl font-bold text-zinc-800 mb-8 flex items-center gap-3">
-            <span className="bg-zinc-800 text-white w-8 h-8 rounded-lg flex items-center justify-center text-sm">Q</span>
-            Practice Exercises
-          </h3>
-          <div className="space-y-6">
-            {lesson.content.exercises.map((ex: any) => (
-              <ExerciseCard key={ex.id} exercise={ex} />
-            ))}
-          </div>
+        <div className="grid gap-4">
+          {lessons?.map((lesson) => (
+            <Link 
+              key={lesson.unit_no}
+              href={`/unit/${lesson.unit_no}`}
+              className="block p-5 bg-white rounded-xl shadow-sm border border-gray-100 hover:border-blue-400 hover:shadow-md transition-all group"
+            >
+              <div className="flex justify-between items-center">
+                <div>
+                  <span className="text-sm font-semibold text-blue-500 uppercase tracking-wider">Unit {lesson.unit_no}</span>
+                  <h2 className="text-xl font-medium text-gray-800 group-hover:text-blue-600">{lesson.title}</h2>
+                </div>
+                <span className="text-2xl text-gray-300 group-hover:text-blue-500">→</span>
+              </div>
+            </Link>
+          ))}
         </div>
       </div>
     </main>
