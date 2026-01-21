@@ -1,4 +1,4 @@
-import { supabase } from '../../lib/supabase'; // path ကို သေချာစစ်ပါ
+import { supabase } from '../../lib/supabaseClient';
 import { notFound } from 'next/navigation';
 
 export default async function UnitPage({ params }: { params: { id: string } }) {

@@ -1,4 +1,4 @@
-import { supabase } from '../lib/supabase'; // path ကို သေချာအောင် ပြင်ထားပါတယ်
+import { supabase } from '../lib/supabaseClient'; 
 import Link from 'next/link';
 
 export default async function Home() {
