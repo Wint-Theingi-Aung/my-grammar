@@ -15,9 +15,8 @@ export default async function UnitPage({ params }: { params: { id: string } }) {
 
   return (
     <main className="p-8 max-w-2xl mx-auto">
-      <a href="/" className="text-blue-500 hover:underline">← Back to Menu</a>
-      <h1 className="text-3xl font-bold mt-6 mb-4">{lesson.title}</h1>
-      <div className="prose bg-gray-50 p-6 rounded-lg border shadow-sm">
+      <h1 className="text-3xl font-bold mb-6">{lesson.title}</h1>
+      <div className="prose">
          <pre className="whitespace-pre-wrap font-sans text-gray-800">
            {lesson.content?.grammar_content?.explanation || "No content found."}
          </pre>
