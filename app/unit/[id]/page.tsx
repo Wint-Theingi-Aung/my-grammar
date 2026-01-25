@@ -1,25 +1,41 @@
-import { supabase } from '@/lib/supabaseClient';
-import { notFound } from 'next/navigation';
+import { notFound } from "next/navigation";
+import { supabase } from "@/lib/supabaseClient";
+import GrammarCard from "@/components/GrammarCard"; // ✅ ရှိပြီးသားကို သုံးမယ်
+import ExerciseCard from "@/components/ExerciseCard"; // ✅ ရှိပြီးသားကို သုံးမယ်
 
-export default async function UnitPage({ params }: { params: { id: string } }) {
-  const unitId = Number(params.id);
-  if (isNaN(unitId)) return notFound();
+type Props = { params: Promise<{ id: string }> };
+
+export default async function UnitPage({ params }: Props) {
+  const { id } = await params; // ✅ Next.js 15 Promise logic
+  const unitNo = Number(id);
+
+  if (isNaN(unitNo)) notFound();
 
   const { data: lesson, error } = await supabase
-    .from('grammar_lessons')
-    .select('*')
-    .eq('unit_no', unitId)
+    .from("grammar_lessons")
+    .select("*")
+    .eq("unit_no", unitNo)
     .single();
 
-  if (error || !lesson) return notFound();
+  if (error || !lesson) notFound();
 
   return (
-    <main className="p-8 max-w-2xl mx-auto">
-      <h1 className="text-3xl font-bold mb-6">{lesson.title}</h1>
-      <div className="prose">
-         <pre className="whitespace-pre-wrap font-sans text-gray-800">
-           {lesson.content?.grammar_content?.explanation || "No content found."}
-         </pre>
+    <main className="min-h-screen bg-slate-50 py-12 px-4">
+      {/* ၁။ Grammar သင်ခန်းစာအပိုင်း */}
+      <GrammarCard lesson={lesson} />
+
+      {/* ၂။ လေ့ကျင့်ခန်းအပိုင်း (မေးခွန်းတစ်ခုချင်းစီအတွက် Card တစ်ခုစီ ထုတ်ပေးမည်) */}
+      <div className="space-y-4">
+        {lesson.content.exercises.map((ex: any) => (
+          <ExerciseCard key={ex.id} exercise={ex} />
+        ))}
+      </div>
+
+      {/* Back Button */}
+      <div className="text-center mt-12">
+        <a href="/" className="inline-block px-8 py-3 bg-indigo-600 text-white font-bold rounded-full hover:bg-indigo-700 transition-all shadow-lg hover:shadow-indigo-200">
+          ← Back to Menu
+        </a>
       </div>
     </main>
   );
