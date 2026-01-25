@@ -1,5 +1,4 @@
 export default function GrammarCard({ lesson }: { lesson: any }) {
-  // content ရှိမရှိ အရင်စစ်ပါ (Build error မတက်အောင်)
   if (!lesson || !lesson.content) return null;
 
   return (

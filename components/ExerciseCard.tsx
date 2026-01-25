@@ -1,9 +1,8 @@
-"use client"
+"use client";
 import { useState } from 'react';
 
 export default function ExerciseCard({ exercise }: { exercise: any }) {
   const [selected, setSelected] = useState<string | null>(null);
-
   if (!exercise) return null;
 
   return (
@@ -17,7 +16,6 @@ export default function ExerciseCard({ exercise }: { exercise: any }) {
         {exercise.options?.map((option: string) => {
           const isSelected = selected === option;
           const isCorrect = option === exercise.answer;
-          
           let buttonClass = "w-full p-5 rounded-2xl text-left font-bold text-lg border-b-4 transition-all ";
           
           if (!selected) {
