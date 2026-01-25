@@ -1,9 +1,10 @@
-// components/ExerciseCard.tsx
 "use client"
 import { useState } from 'react';
 
 export default function ExerciseCard({ exercise }: { exercise: any }) {
   const [selected, setSelected] = useState<string | null>(null);
+
+  if (!exercise) return null;
 
   return (
     <div className="bg-white rounded-[2rem] shadow-xl shadow-slate-200/50 p-8 border border-slate-100 max-w-2xl mx-auto my-6">
@@ -13,7 +14,7 @@ export default function ExerciseCard({ exercise }: { exercise: any }) {
       </div>
 
       <div className="grid gap-4">
-        {exercise.options.map((option: string) => {
+        {exercise.options?.map((option: string) => {
           const isSelected = selected === option;
           const isCorrect = option === exercise.answer;
           
@@ -36,8 +37,8 @@ export default function ExerciseCard({ exercise }: { exercise: any }) {
             >
               <div className="flex justify-between items-center">
                 <span>{option}</span>
-                {selected && isCorrect && <span className="text-green-500">✔</span>}
-                {isSelected && !isCorrect && <span className="text-red-500">✖</span>}
+                {selected && isCorrect && <span className="text-green-500 font-bold">✔</span>}
+                {isSelected && !isCorrect && <span className="text-red-500 font-bold">✖</span>}
               </div>
             </button>
           );
